@@ -1,19 +1,17 @@
 using UnityEngine;
 
-public class PlayerMovement : MonoBehaviour
+public class PlayerMover : MonoBehaviour
 {
-    [SerializeField] float speed = 5.0f;
-    [SerializeField] SpriteRenderer playerSpriteRenderer;
+    [SerializeField] float moveSpeed = 5.0f;
+    [SerializeField] SpriteRenderer imageSprite;
 
     private Vector3 screenBounds;
     private Vector2 objectSize;
 
     void Start()
     {
-        // calculates screen bounds in World space coordinates
-        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));
-        // calculates size of GameObject's bounding box through its sprite renderer
-        objectSize = new Vector2(playerSpriteRenderer.bounds.extents.x, playerSpriteRenderer.bounds.extents.y);
+        screenBounds = Camera.main.ScreenToWorldPoint(new Vector3(Screen.width, Screen.height, Camera.main.transform.position.z));  // calculates screen bounds in World space coordinates
+        objectSize = new Vector2(imageSprite.bounds.extents.x, imageSprite.bounds.extents.y); // calculates size of GameObject's bounding box through its sprite renderer
     }
 
     void Update()
@@ -21,16 +19,14 @@ public class PlayerMovement : MonoBehaviour
         MakeMove();
     }
 
-    /**
-     * Makes GameObject moveable within the World space.
-     */
+    /** Makes GameObject moveable within the World space. */
     void MakeMove()
     {
         float moveUp = Input.GetAxis("Vertical");
         float moveRight = Input.GetAxis("Horizontal");
 
         Vector2 movement = new Vector2(moveRight, moveUp);
-        Vector3 newPosition = transform.position + (Vector3)(movement * speed * Time.deltaTime);
+        Vector3 newPosition = transform.position + (Vector3)(movement * moveSpeed * Time.deltaTime);
 
         transform.position = GetClampedPosition(newPosition); // limit position to the screen boundaries
 
@@ -38,9 +34,7 @@ public class PlayerMovement : MonoBehaviour
         // transform.Translate(movement * speed * Time.deltaTime);
     }
 
-    /**
-     * Clamps a Vector3 position between the screen boundaries and returns the clamped Vector3 position.
-     */
+    /** Clamps a Vector3 position between the screen boundaries and returns the clamped Vector3 position. */
     Vector3 GetClampedPosition(Vector3 position)
     {
         int clampDirection =  -1; // corresponds to orthographic camera 
@@ -51,6 +45,4 @@ public class PlayerMovement : MonoBehaviour
 
         return clampedPosition;
     }
-
-
 }
